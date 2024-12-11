@@ -1,0 +1,101 @@
+from google.colab import drive
+drive.mount('/content/drive')
+%cd /content/drive/MyDrive
+
+import pandas as pd
+data = pd.read_csv('companies_rank.csv', sep=',')
+#data = data.drop(['symbol'], axis=1)
+#data = data.query("rank > 200 & rank < 3000 & country == 'India'")
+data.head(5)
+
+data['country'] = data['country'].astype('category')
+data['country'] = data['country'].cat.codes
+data.head()
+
+
+from sklearn.model_selection import train_test_split
+X = data[['rank', 'price', 'country']]
+y = data['marketcap']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.26)
+X_train.head(2)
+
+data['price'].plot.line()
+
+def prosti_broj():
+  prost_broj = 0
+
+  while prost_broj == 0:
+    from random import randint
+
+    slucajni_broj = randint(2, 200)
+
+    prost_broj = 1
+
+    for djeljitelj in range(2, slucajni_broj):
+      if slucajni_broj % djeljitelj == 0:
+        prost_broj = 0
+
+  return slucajni_broj
+
+def generiraj_brojeve(skup):
+  prosti_brojevi = []
+
+  for index, broj in enumerate(skup['price']):
+    broj = prosti_broj()
+    prosti_brojevi.append(broj)
+
+  skup['prosti_broj'] = prosti_brojevi
+
+generiraj_brojeve(X_train)
+generiraj_brojeve(X_test)
+X_train.head()
+
+from sklearn.neighbors import KNeighborsRegressor
+model = KNeighborsRegressor(n_neighbors=3)
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+
+model = KNeighborsRegressor(n_neighbors=7)
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+
+from sklearn.linear_model import Ridge
+model = Ridge(alpha=10)
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+
+from sklearn.tree import DecisionTreeRegressor
+model = DecisionTreeRegressor(max_depth=50)
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+
+best_depth = 1
+best_score = 0
+
+for depth in range(20, 100):
+  model = DecisionTreeRegressor(max_depth=depth)
+  model.fit(X_train, y_train)
+  score = model.score(X_test, y_test)
+
+  if score > best_score:
+    best_depth = depth
+    best_score = score
+print('Najbolji max_depth=', best_depth, 'i ima točnost', best_score)
+
+#chat rijesenje
+results = pd.DataFrame({
+    "Model": ["k-NN (k=3)", "k-NN (k=7)", "Linearna regresija", "Ridge regresija", "Stablo odluke"],
+    "MSE": [mse_knn3, mse_knn7, mse_linear, mse_ridge, mse_tree],
+    "R2": [r2_knn3, r2_knn7, r2_linear, r2_ridge, r2_tree]
+})
+
+print("Rezultati:")
+print(results)
+print(f"Optimalna dubina stabla odluke: {best_depth}")
