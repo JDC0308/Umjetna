@@ -2,6 +2,11 @@ from google.colab import drive
 drive.mount('/content/drive')
 %cd /content/drive/MyDrive
 
+SELECT Attrition, MonthlyIncome, DistanceFromHome, JobRole, Age, TotalWorkingYears, JobSatisfaction
+FROM ibm
+ORDER BY EmployeeNumber ASC
+LIMIT 3000 OFFSET 270;
+
 import pandas as pd
 data = pd.read_csv('companies_rank.csv', sep=',')
 #data = data.drop(['symbol'], axis=1)
