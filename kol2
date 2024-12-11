@@ -59,3 +59,21 @@ from sklearn.ensemble import RandomForestClassifier
 model = RandomForestClassifier()
 model.fit(X_train, y_train)
 model.score(X_test, y_test)
+
+import matplotlib.pyplot as plt
+
+# Vrijednosti točnosti za različite algoritme
+accuracies = [tocnost_k1, tocnost_k10, tocnost_k50, tocnost_tree, tocnost_forest]
+
+# Nazivi algoritama za x-os
+algorithms = ['k-NN (k=1)', 'k-NN (k=10)', 'k-NN (k=50)', 'Decision Tree', 'Random Forest']
+
+# Izrada linijskog grafa
+plt.figure(figsize=(10, 6))
+plt.plot(algorithms, accuracies, marker='o', linestyle='-', color='b')
+plt.title('Točnost različitih algoritama')
+plt.xlabel('Algoritam')
+plt.ylabel('Točnost')
+plt.ylim(0, 1)  # Postavljanje granica y-osi između 0 i 1
+plt.grid(True)
+plt.show()
