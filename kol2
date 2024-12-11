@@ -1,0 +1,45 @@
+from google.colab import drive
+drive.mount('/content/drive')
+%cd /content/drive/MyDrive
+
+SELECT Attrition, MonthlyIncome, DistanceFromHome, JobRole, Age, TotalWorkingYears, JobSatisfaction 
+FROM ibm 
+ORDER BY EmployeeNumber ASC 
+LIMIT 3000 OFFSET 270
+
+import pandas as pd
+data = pd.read_csv('ibm.csv', sep=',')
+data.tail(970)
+
+def prosti_broj():
+  prost_broj = 0
+
+  while prost_broj == 0:
+    from random import randint
+
+    slucajni_broj = randint(2, 200)
+
+    prost_broj = 1
+
+    for djeljitelj in range(2, slucajni_broj):
+      if slucajni_broj % djeljitelj == 0:
+        prost_broj = 0
+
+  return slucajni_broj
+
+def generiraj_brojeve(skup):
+  prosti_brojevi = []
+
+  for index, broj in enumerate(skup['price']):
+    broj = prosti_broj()
+    prosti_brojevi.append(broj)
+
+  skup['prosti_broj'] = prosti_brojevi
+
+data['Attrition'] = data['Attrition'].astype('category')
+data['Attrition'] = data['Attrition'].cat.codes
+
+data['BusinessTravel'] = data['BusinessTravel'].astype('category')
+data['BusinessTravel'] = data['BusinessTravel'].cat.codes
+
+data.head()
