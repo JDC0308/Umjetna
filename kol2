@@ -43,3 +43,19 @@ data['BusinessTravel'] = data['BusinessTravel'].astype('category')
 data['BusinessTravel'] = data['BusinessTravel'].cat.codes
 
 data.head()
+
+
+from sklearn.neighbors import KNeighborsClassifier
+model = KNeighborsClassifier(n_neighbors=1)
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+
+from sklearn.tree import DecisionTreeClassifier
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
